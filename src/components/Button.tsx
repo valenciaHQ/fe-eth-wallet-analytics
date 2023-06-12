@@ -8,7 +8,7 @@ interface IButtonProps {
 const Button = ({ label, onClickEvent }: IButtonProps): JSX.Element => (
   <a
     href="#_"
-    className="w-48 ml-auto mr-0 inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-indigo-100 border border-indigo-500 rounded-lg shadow-sm cursor-pointer hover:text-white bg-gradient-to-br from-purple-500 via-indigo-500 to-indigo-500"
+    className="w-full my-2 md:w-48 ml-auto mr-0 inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-indigo-100 border border-indigo-500 rounded-lg shadow-sm cursor-pointer hover:text-white bg-gradient-to-br from-purple-500 via-indigo-500 to-indigo-500"
     onClick={onClickEvent}
   >
     <svg
@@ -19,9 +19,9 @@ const Button = ({ label, onClickEvent }: IButtonProps): JSX.Element => (
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
         d="M13 10V3L4 14h7v7l9-11h-7z"
       ></path>
     </svg>
