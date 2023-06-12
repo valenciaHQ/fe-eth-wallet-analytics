@@ -7,8 +7,9 @@ import { Transaction } from "../model";
 const Address = ({ address }: { address: string }) => {
   const [isOld, setIsOld] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [balance, setBalance] = useState(0);
+
   useEffect(() => {
-    setLoading(true);
     fetch(`http://localhost:3001/account/transactions/${address}`, {
       method: "GET",
       headers: {
@@ -31,7 +32,6 @@ const Address = ({ address }: { address: string }) => {
             //if oneYearAgoDate is bigger than wallet timestamp, the wallet is older than 1 year old.
             const isOld = oneYearAgoDate.getTime() > lastTrxDate.getTime();
             setIsOld(isOld);
-            setLoading(false);
           }
         } catch (error) {
           console.error(error);
@@ -39,6 +39,18 @@ const Address = ({ address }: { address: string }) => {
       })
       .catch((error) => {
         console.error(error);
+      });
+
+    setLoading(true);
+    fetch(`http://localhost:3001/account/balance/${address}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setBalance(result);
         setLoading(false);
       });
   }, [address]);
@@ -59,8 +71,11 @@ const Address = ({ address }: { address: string }) => {
         <td>
           <div className="flex">
             <p className="break-all">{address}</p>
-            {loading ? <Loading /> : isOld ? <Svg icon="info" /> : null}
+            {isOld ? <Svg icon="info" /> : null}
           </div>
+        </td>
+        <td>
+          <p>{loading ? <Loading /> : balance}eth</p>
         </td>
         <td onClick={handleCopyToClipboard}>
           <Svg icon="copy" />
