@@ -10,7 +10,7 @@ import { AddressType } from "./model";
 
 function App() {
   const { data: favouriteAddresses, error } = useFetch<AddressType[]>(
-    `http://localhost:3001/wallets`
+    `${process.env.REACT_APP_API_BASE_URL}/wallets`
   );
 
   const favourites = useMemo(

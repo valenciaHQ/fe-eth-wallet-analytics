@@ -9,10 +9,10 @@ import { toast } from "react-toastify";
 
 const Address = ({ address, isFav }: AddressType) => {
   const { data: lastTrx, error: lastTrxError } = useFetch<Transaction>(
-    `http://localhost:3001/account/transactions/${address}`
+    `${process.env.REACT_APP_API_BASE_URL}/account/transactions/${address}`
   );
   const { data: balance, error: balanceError } = useFetch<number>(
-    `http://localhost:3001/account/balance/${address}`
+    `${process.env.REACT_APP_API_BASE_URL}/account/balance/${address}`
   );
 
   if (lastTrxError) {

@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 const Favourite = ({ address, isFav }: AddressType) => {
   const saveToFavourites = () => {
-    fetch(`http://localhost:3001/wallets/create/${address}`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/wallets/create/${address}`, {
       method: "POST",
     });
     toast.success("Address saved");

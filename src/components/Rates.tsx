@@ -6,7 +6,7 @@ import Loading from "./Loading";
 
 const RatesBox = () => {
   const { data, error } = useFetch<RatesModel>(
-    `http://localhost:3001/rates/eth`
+    `${process.env.REACT_APP_API_BASE_URL}/rates/eth`
   );
 
   //Force re-render to retrieve rates values
