@@ -1,13 +1,30 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Button from "./components/Button";
 import InputWithIcon from "./components/InputWithIcon";
 import Address from "./components/Address";
 import Rates from "./components/Rates";
+import { ToastContainer } from "react-toastify";
+import { useFetch } from "./hooks/useFetch";
+import Loading from "./components/Loading";
+import { AddressType } from "./model";
 
 function App() {
-  const [addresses, setAddresses] = useState<string[]>([
-    "0x579324A4DE639f9672bB2A11e0dE9e851C268dCe",
-  ]);
+  const { data: favouriteAddresses, error } = useFetch<AddressType[]>(
+    `http://localhost:3001/wallets`
+  );
+
+  const favourites = useMemo(
+    () =>
+      favouriteAddresses?.map((item) => ({
+        address: item.address,
+        isFav: true,
+      })),
+    [favouriteAddresses]
+  );
+
+  const [addresses, setAddresses] = useState<
+    { address: string; isFav: boolean }[]
+  >([]);
   const [showAddressInput, setShowAddressInput] = useState(false);
 
   const handleAddAddress = (value: string) => {
@@ -15,9 +32,23 @@ function App() {
       setShowAddressInput(false);
       return;
     }
-    setAddresses([...addresses, value]);
+    const newAddress: AddressType = { address: value, isFav: false };
+    const newAddreses = addresses ? [...addresses, newAddress] : [newAddress];
+    setAddresses(newAddreses);
     setShowAddressInput(false);
   };
+
+  if (!addresses && error) {
+    return (
+      <main>
+        <section className="flex p-4 md:p-10 md:container md:mx-auto">
+          <div className="flex flex-col w-full">
+            <p>An error ocurred, try again later</p>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main>
@@ -34,13 +65,22 @@ function App() {
           )}
           <table className="table-auto mt-10">
             <tbody>
-              {addresses.map((address) => (
-                <Address key={address} address={address} />
-              ))}
+              {!favourites ? (
+                <Loading />
+              ) : (
+                [...favourites, ...addresses].map((item) => (
+                  <Address
+                    key={item.address}
+                    address={item.address}
+                    isFav={item.isFav}
+                  />
+                ))
+              )}
             </tbody>
           </table>
         </div>
       </section>
+      <ToastContainer />
     </main>
   );
 }
